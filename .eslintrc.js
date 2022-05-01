@@ -17,6 +17,7 @@ module.exports = {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'react/react-in-jsx-scope': 'off',
-    'space-before-function-paren': 'off'
+    'space-before-function-paren': 'off',
+    'multiline-ternary': 'off'
   }
 }

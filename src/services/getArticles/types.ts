@@ -9,5 +9,6 @@ export type Article = {
   headline: {
     main: string
   }
+  pub_date: string
   _id: string
 }
