@@ -1,8 +1,32 @@
 import { useArticle } from '../../hooks'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { useQuery } from 'react-query'
+import { ArticlesFetch } from '../../services/types'
+import { getArticle } from '../../services'
+import { useEffect } from 'react'
+
+type Params = {
+  id: string
+  documentType: string
+}
 
 export const Article = () => {
-  const { currentArticle } = useArticle()
+  const { currentArticle, handleArticle } = useArticle()
+  const { id, documentType } = useParams<Params>()
+
+  const { data, isLoading } = useQuery<ArticlesFetch>(['article', id], () =>
+    getArticle(documentType, id)
+  )
+
+  useEffect(() => {
+    if (data?.response.docs) {
+      handleArticle(data.response.docs[0])
+    }
+  }, [data])
+
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
 
   const formatPubDate = () => {
     const pubDate = new Date(currentArticle?.pub_date ?? '')
@@ -18,7 +42,7 @@ export const Article = () => {
     <div>
       <Link to="/">Back to list</Link>
       <h1>{currentArticle?.headline.main}</h1>
-      <p>{currentArticle?.abstract}</p>
+      <p>{currentArticle?.lead_paragraph}</p>
       <p>{pubDate}</p>
     </div>
   )

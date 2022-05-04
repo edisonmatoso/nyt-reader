@@ -1,5 +1,5 @@
 import React from 'react'
-import { Article } from '../services/getArticles/types'
+import { Article } from '../services/types'
 
 type Context = {
   currentArticle: Article | undefined

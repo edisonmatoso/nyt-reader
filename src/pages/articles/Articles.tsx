@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useArticle, useDebounce } from '../../hooks'
 import { getArticles } from '../../services'
-import { ArticlesFetch } from '../../services/getArticles/types'
+import { ArticlesFetch } from '../../services/types'
 
 export const Articles = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -28,6 +28,11 @@ export const Articles = () => {
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) =>
     setTerm(event.target.value)
 
+  const getArticleId = (fullId: string) => {
+    const result = fullId.match(/([^/]+$)/i)
+    return result ? result[0] : ''
+  }
+
   useEffect(() => {
     setSearchParams({ page: page.toString(), search: term })
   }, [searchParams, page, term])
@@ -42,7 +47,10 @@ export const Articles = () => {
       <ul>
         {docs?.map((article) => (
           <li key={article._id}>
-            <Link to="/article" onClick={() => handleArticle(article)}>
+            <Link
+              to={`/${article.document_type}/${getArticleId(article._id)}`}
+              onClick={() => handleArticle(article)}
+            >
               {article.headline.main}
             </Link>
           </li>

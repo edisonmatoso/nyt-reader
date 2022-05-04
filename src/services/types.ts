@@ -5,10 +5,11 @@ export type ArticlesFetch = {
 }
 
 export type Article = {
-  abstract: string
+  lead_paragraph: string
+  pub_date: string
+  document_type: string
   headline: {
     main: string
   }
-  pub_date: string
   _id: string
 }

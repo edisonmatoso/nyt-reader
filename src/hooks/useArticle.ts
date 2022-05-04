@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import ArticleContext from '../context/ArticleContext'
-import { Article } from '../services/getArticles/types'
+import { Article } from '../services/types'
 
 export const useArticle = () => {
   const { currentArticle, setCurrentArticle } = useContext(ArticleContext)

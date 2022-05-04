@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Article } from '../services/getArticles/types'
+import { Article } from '../services/types'
 import ArticleContext from './ArticleContext'
 
 const ArticleProvider = ({ children }: { children: React.ReactNode }) => {
