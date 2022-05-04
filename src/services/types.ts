@@ -1,6 +1,9 @@
 export type ArticlesFetch = {
-  response: {
+  response?: {
     docs: Array<Article>
+  }
+  fault?: {
+    faultstring: string
   }
 }
 
@@ -11,5 +14,6 @@ export type Article = {
   headline: {
     main: string
   }
+  web_url: string
   _id: string
 }

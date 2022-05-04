@@ -4,6 +4,16 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useArticle, useDebounce } from '../../hooks'
 import { getArticles } from '../../services'
 import { ArticlesFetch } from '../../services/types'
+import {
+  Input,
+  Label,
+  List,
+  ListItem,
+  ListLabel,
+  NaviagationArea,
+  NavigationButton,
+  SearchArea
+} from './Articles.styles'
 
 export const Articles = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -16,12 +26,14 @@ export const Articles = () => {
   const { handleArticle } = useArticle()
   const debouncedTerm = useDebounce(term)
 
-  const { data, isLoading } = useQuery<ArticlesFetch>(
+  const { data, isLoading, isFetching } = useQuery<ArticlesFetch>(
     ['articles', page, debouncedTerm],
     () => getArticles(page, debouncedTerm),
-    { keepPreviousData: true }
+    {
+      keepPreviousData: true
+    }
   )
-  const docs = data?.response.docs
+  const docs = data?.response?.docs
 
   const goPrevious = () => setPage((lastState) => lastState - 1)
   const goNext = () => setPage((lastState) => lastState + 1)
@@ -37,29 +49,54 @@ export const Articles = () => {
     setSearchParams({ page: page.toString(), search: term })
   }, [searchParams, page, term])
 
+  if (data?.fault) {
+    return (
+      <>
+        <p>Woops... Some error ocurred</p>
+        <code>{data.fault.faultstring}</code>
+      </>
+    )
+  }
+
   if (isLoading) {
     return <p>Loading...</p>
   }
 
   return (
     <div>
-      <input type="text" onChange={handleChangeInput} value={term} />
-      <ul>
+      <SearchArea>
+        <Label htmlFor="termSearch">Type search query term here:</Label>
+        <Input
+          id="termSearch"
+          type="text"
+          onChange={handleChangeInput}
+          value={term}
+        />
+      </SearchArea>
+      <List>
+        <ListLabel>Results:</ListLabel>
         {docs?.map((article) => (
-          <li key={article._id}>
+          <ListItem key={article._id}>
             <Link
               to={`/${article.document_type}/${getArticleId(article._id)}`}
               onClick={() => handleArticle(article)}
             >
               {article.headline.main}
             </Link>
-          </li>
+          </ListItem>
         ))}
-      </ul>
-      <button onClick={goPrevious} disabled={page === 0}>
-        previous
-      </button>
-      <button onClick={goNext}>next</button>
+      </List>
+      <NaviagationArea>
+        <NavigationButton
+          onClick={goPrevious}
+          disabled={page === 0 || isFetching}
+        >
+          {'< Prev page'}
+        </NavigationButton>
+        <NavigationButton onClick={goNext} disabled={isFetching}>
+          {'Next page >'}
+        </NavigationButton>
+      </NaviagationArea>
     </div>
   )
 }

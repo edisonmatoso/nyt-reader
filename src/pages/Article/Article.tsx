@@ -19,7 +19,7 @@ export const Article = () => {
   )
 
   useEffect(() => {
-    if (data?.response.docs) {
+    if (data?.response?.docs) {
       handleArticle(data.response.docs[0])
     }
   }, [data])
@@ -40,10 +40,14 @@ export const Article = () => {
 
   return (
     <div>
-      <Link to="/">Back to list</Link>
+      <Link to="/">{'< Go to results page'}</Link>
       <h1>{currentArticle?.headline.main}</h1>
-      <p>{currentArticle?.lead_paragraph}</p>
       <p>{pubDate}</p>
+      <p>{currentArticle?.lead_paragraph}</p>
+
+      <a target="_blank" href={currentArticle?.web_url} rel="noreferrer">
+        Read the full article
+      </a>
     </div>
   )
 }
